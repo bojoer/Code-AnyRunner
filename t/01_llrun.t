@@ -31,7 +31,10 @@ my \$ccc = \$aaa + \$bbb;
 
 print \$ccc;
 CODE
-    my ($output, $error, $timeout) = $runner->run_code("perl", $code);
+    my $result = $runner->run_code("perl", $code);
+    my $output = $result->{output};
+    my $error = $result->{error};
+    my $timeout = $result->{timeout};
     is $output, 300;
     ok !$error;
     ok !$timeout;
@@ -55,7 +58,10 @@ CODE
 100
 200
 INPUT
-    my ($output, $error, $timeout) = $runner->run_code("perl", $code, $input);
+    my $result = $runner->run_code("perl", $code, $input);
+    my $output = $result->{output};
+    my $error = $result->{error};
+    my $timeout = $result->{timeout};
     is $output, 300;
     ok !$error;
     ok !$timeout;
@@ -66,7 +72,10 @@ sub test_cause_error : Tests {
     my $code = <<CODE;
 use
 CODE
-    my ($output, $error, $timeout) = $runner->run_code("perl", $code);
+    my $result = $runner->run_code("perl", $code);
+    my $output = $result->{output};
+    my $error = $result->{error};
+    my $timeout = $result->{timeout};
     ok !$output;
     like $error, qr/syntax error/;
     ok !$timeout;
@@ -77,7 +86,10 @@ sub test_cause_timeout : Tests {
     my $code = <<CODE;
 sleep(5);
 CODE
-    my ($output, $error, $timeout) = $runner->run_code("perl", $code);
+    my $result = $runner->run_code("perl", $code);
+    my $output = $result->{output};
+    my $error = $result->{error};
+    my $timeout = $result->{timeout};
     ok !$output;
     ok !$error;
     is $timeout, 1;

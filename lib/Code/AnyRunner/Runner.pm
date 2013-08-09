@@ -7,6 +7,8 @@ use IPC::Run qw/run timeout/;
 
 use List::Util qw/first/;
 
+use Code::AnyRunner::Result;
+
 sub new {
     my ($class, %opt) = @_;
     my $self = bless {
@@ -51,7 +53,14 @@ sub execute {
             die $@;
         }
     }
-    return ($output, $error, $timeout);
+
+    my $result = Code::AnyRunner::Result->new(
+        output => $output,
+        error  => $error,
+        timeout => $timeout
+    );
+
+    return $result;
 }
 
 1;
