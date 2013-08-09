@@ -4,6 +4,7 @@ all_from 'lib/Code/AnyRunner.pm';
 
 requires 'File::Temp';
 requires 'IPC::Run';
+requires 'Unix::Getrusage';
 
 tests 't/*.t';
 author_tests 'xt';

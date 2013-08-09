@@ -7,7 +7,8 @@ sub new {
     bless {
         output  => $opt{output},
         error   => $opt{error},
-        timeout => $opt{timeout}
+        timeout => $opt{timeout},
+        rusage  => $opt{rusage}
     }, $class;
 }
 

@@ -5,6 +5,7 @@ use warnings;
 use IPC::Run qw/run timeout/;
 use File::Temp;
 use List::Util qw/first/;
+use Unix::Getrusage;
 
 use Code::AnyRunner::Result;
 
@@ -44,6 +45,7 @@ sub execute {
     eval {
         run $command, \$input, \$output, \$error, timeout($timeout_sec);
     };
+    my $rusage = getrusage_children;
     if ($@) {
         if ($@ =~ /timeout/) {
             $timeout = 1;
@@ -56,7 +58,8 @@ sub execute {
     my $result = Code::AnyRunner::Result->new(
         output => $output,
         error  => $error,
-        timeout => $timeout
+        timeout => $timeout,
+        rusage => $rusage
     );
 
     return $result;
