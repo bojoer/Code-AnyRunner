@@ -6,22 +6,40 @@ our $VERSION = '0.01';
 use File::Temp;
 use IPC::Run qw/run timeout/;
 
+use List::Util qw/first/;
+
 sub new {
     my ($class, %opt) = @_;
-    bless {}, $class;
+    bless {
+        settings => {},
+    }, $class;
+}
+
+sub add_setting {
+    my ($self, %opt) = @_;
+
+    my $setting_name = $opt{name};
+    delete $opt{name};
+
+    $self->{settings}->{$setting_name} = \%opt;
 }
 
 sub run_code {
     my ($self, $code, $input) = @_;
 
+    my $setting = $self->{settings}->{"perl"};
+
     my ($temp_fh, $temp_filename) = File::Temp::tempfile(
-        SUFFIX => ".pl",
+        SUFFIX => $setting->{code_suffix},
     );
 
     print $temp_fh $code;
     close $temp_fh;
 
-    my @command = ("perl", $temp_filename);
+    my @command = split(/ /, $setting->{execute});
+    my $code_idx = first { $command[$_] eq "CODE" } (0 .. $#command);
+    $command[$code_idx] = $temp_filename;
+
     my ($output, $error, $timeout) = ("", "", 0);
     eval {
         run \@command, \$input, \$output, \$error, timeout(1);

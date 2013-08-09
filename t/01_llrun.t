@@ -10,6 +10,13 @@ __PACKAGE__->runtests;
 sub setup : Test(setup) {
     my $self = shift;
     $self->{runner} = Code::AnyRunner->new;
+    $self->{runner}->add_setting(
+        name => "perl",
+        code_suffix => ".pl",
+        exec_suffix => "",
+        compile => "",
+        execute => "perl CODE",
+    );
 }
 
 sub test_no_input : Tests {
