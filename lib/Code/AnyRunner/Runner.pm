@@ -2,9 +2,8 @@ package Code::AnyRunner::Runner;
 use strict;
 use warnings;
 
-use File::Temp;
 use IPC::Run qw/run timeout/;
-
+use File::Temp;
 use List::Util qw/first/;
 
 use Code::AnyRunner::Result;
