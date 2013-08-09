@@ -3,10 +3,7 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
-use File::Temp;
-use IPC::Run qw/run timeout/;
-
-use List::Util qw/first/;
+use Code::AnyRunner::Runner;
 
 sub new {
     my ($class, %opt) = @_;
@@ -29,32 +26,11 @@ sub run_code {
     my ($self, $setting_name, $code, $input) = @_;
 
     my $setting = $self->{settings}->{$setting_name};
-
-    my ($temp_fh, $temp_filename) = File::Temp::tempfile(
-        SUFFIX => $setting->{code_suffix},
+    my $runner = Code::AnyRunner::Runner->new(
+        setting => $setting,
+        code    => $code,
     );
-
-    print $temp_fh $code;
-    close $temp_fh;
-
-    my @command = split(/ /, $setting->{execute});
-    my $code_idx = first { $command[$_] eq "CODE" } (0 .. $#command);
-    $command[$code_idx] = $temp_filename;
-
-    my $timeout_sec = $self->{timeout_sec};
-    my ($output, $error, $timeout) = ("", "", 0);
-    eval {
-        run \@command, \$input, \$output, \$error, timeout($timeout_sec);
-    };
-    if ($@) {
-        if ($@ =~ /timeout/) {
-            $timeout = 1;
-        }
-        else {
-            die $@;
-        }
-    }
-    return ($output, $error, $timeout);
+    $runner->execute($input);
 }
 
 1;
