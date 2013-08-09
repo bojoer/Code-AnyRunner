@@ -25,9 +25,9 @@ sub add_setting {
 }
 
 sub run_code {
-    my ($self, $code, $input) = @_;
+    my ($self, $setting_name, $code, $input) = @_;
 
-    my $setting = $self->{settings}->{"perl"};
+    my $setting = $self->{settings}->{$setting_name};
 
     my ($temp_fh, $temp_filename) = File::Temp::tempfile(
         SUFFIX => $setting->{code_suffix},
