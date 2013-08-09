@@ -12,6 +12,7 @@ sub new {
     my ($class, %opt) = @_;
     bless {
         settings => {},
+        timeout_sec => $opt{timeout_sec} || 1,
     }, $class;
 }
 
@@ -40,9 +41,10 @@ sub run_code {
     my $code_idx = first { $command[$_] eq "CODE" } (0 .. $#command);
     $command[$code_idx] = $temp_filename;
 
+    my $timeout_sec = $self->{timeout_sec};
     my ($output, $error, $timeout) = ("", "", 0);
     eval {
-        run \@command, \$input, \$output, \$error, timeout(1);
+        run \@command, \$input, \$output, \$error, timeout($timeout_sec);
     };
     if ($@) {
         if ($@ =~ /timeout/) {
