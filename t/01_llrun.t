@@ -33,10 +33,9 @@ print \$ccc;
 CODE
     my $result = $runner->run_code("perl", $code);
     my $output = $result->{output};
-    my $error = $result->{error};
     my $timeout = $result->{timeout};
     is $output, 300;
-    ok !$error;
+    ok !($result->is_error);
     ok !$timeout;
 }
 
@@ -60,10 +59,9 @@ CODE
 INPUT
     my $result = $runner->run_code("perl", $code, $input);
     my $output = $result->{output};
-    my $error = $result->{error};
     my $timeout = $result->{timeout};
     is $output, 300;
-    ok !$error;
+    ok !($result->is_error);
     ok !$timeout;
 }
 
@@ -88,9 +86,8 @@ sleep(5);
 CODE
     my $result = $runner->run_code("perl", $code);
     my $output = $result->{output};
-    my $error = $result->{error};
     my $timeout = $result->{timeout};
     ok !$output;
-    ok !$error;
+    ok !($result->is_error);
     is $timeout, 1;
 }

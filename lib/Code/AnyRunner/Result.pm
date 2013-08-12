@@ -12,4 +12,8 @@ sub new {
     }, $class;
 }
 
+sub is_error {
+    shift->{error} ne "";
+}
+
 1;
