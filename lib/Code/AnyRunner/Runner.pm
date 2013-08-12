@@ -2,7 +2,7 @@ package Code::AnyRunner::Runner;
 use strict;
 use warnings;
 
-use IPC::Run qw/run timeout/;
+use IPC::Run qw/start finish timeout/;
 use File::Temp;
 use List::Util qw/first/;
 use Unix::Getrusage;
@@ -42,10 +42,11 @@ sub execute {
     my $command = $self->{command};
     my $timeout_sec = $self->{timeout_sec};
     my ($output, $error, $timeout) = ("", "", 0);
-    eval {
-        run $command, \$input, \$output, \$error, timeout($timeout_sec);
-    };
+    my $harness = start $command, \$input, \$output, \$error, timeout($timeout_sec);
     my $rusage = getrusage_children;
+    eval {
+        finish $harness;
+    };
     if ($@) {
         if ($@ =~ /timeout/) {
             $timeout = 1;
