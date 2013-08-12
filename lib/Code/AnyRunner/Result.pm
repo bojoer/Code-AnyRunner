@@ -24,4 +24,8 @@ sub utime {
     shift->{rusage}->{ru_utime};
 }
 
+sub stime {
+    shift->{rusage}->{ru_stime};
+}
+
 1;

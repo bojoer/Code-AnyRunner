@@ -17,4 +17,5 @@ sub test_rusage : Tests {
     );
 
     ok $result->utime >= 0;
+    ok $result->stime >= 0;
 }
