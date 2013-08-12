@@ -33,10 +33,9 @@ print \$ccc;
 CODE
     my $result = $runner->run_code("perl", $code);
     my $output = $result->{output};
-    my $timeout = $result->{timeout};
     is $output, 300;
     ok !($result->is_error);
-    ok !$timeout;
+    ok !($result->is_timeout);
 }
 
 sub test_input : Tests {
@@ -59,10 +58,9 @@ CODE
 INPUT
     my $result = $runner->run_code("perl", $code, $input);
     my $output = $result->{output};
-    my $timeout = $result->{timeout};
     is $output, 300;
     ok !($result->is_error);
-    ok !$timeout;
+    ok !($result->is_timeout);
 }
 
 sub test_cause_error : Tests {
@@ -73,10 +71,9 @@ CODE
     my $result = $runner->run_code("perl", $code);
     my $output = $result->{output};
     my $error = $result->{error};
-    my $timeout = $result->{timeout};
     ok !$output;
     like $error, qr/syntax error/;
-    ok !$timeout;
+    ok !($result->is_timeout);
 }
 
 sub test_cause_timeout : Tests {
@@ -86,8 +83,7 @@ sleep(5);
 CODE
     my $result = $runner->run_code("perl", $code);
     my $output = $result->{output};
-    my $timeout = $result->{timeout};
     ok !$output;
     ok !($result->is_error);
-    is $timeout, 1;
+    ok $result->is_timeout;
 }

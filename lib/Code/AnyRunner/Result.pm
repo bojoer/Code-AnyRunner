@@ -16,4 +16,8 @@ sub is_error {
     shift->{error} ne "";
 }
 
+sub is_timeout {
+    shift->{timeout} == 1;
+}
+
 1;
