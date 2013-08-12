@@ -28,4 +28,8 @@ sub stime {
     shift->{rusage}->{ru_stime};
 }
 
+sub maxrss {
+    shift->{rusage}->{ru_maxrss};
+}
+
 1;
