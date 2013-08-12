@@ -20,4 +20,8 @@ sub is_timeout {
     shift->{timeout} == 1;
 }
 
+sub utime {
+    shift->{rusage}->{ru_utime};
+}
+
 1;
