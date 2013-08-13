@@ -18,6 +18,7 @@ sub test_load : Tests{
 
     my $expected = {
         foo => {
+            baz => "zzz",
             bar => "hoge"
         }
     };

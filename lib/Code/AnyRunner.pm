@@ -36,6 +36,7 @@ sub load_recipes {
     foreach my $recipe_name (keys %$config) {
         if ($recipe_name ne "_") {
             my $recipe = $config->{$recipe_name};
+            %$recipe = (%$recipe, %{$config->{_}});
             $recipe->{name} = $recipe_name;
             $self->add_recipe(%$recipe);
         }
