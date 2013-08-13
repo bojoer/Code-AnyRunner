@@ -8,26 +8,26 @@ use Code::AnyRunner::Runner;
 sub new {
     my ($class, %opt) = @_;
     bless {
-        settings => {},
+        recipes => {},
         timeout_sec => $opt{timeout_sec} || 1,
     }, $class;
 }
 
-sub add_setting {
+sub add_recipe {
     my ($self, %opt) = @_;
 
-    my $setting_name = $opt{name};
+    my $recipe_name = $opt{name};
     delete $opt{name};
 
-    $self->{settings}->{$setting_name} = \%opt;
+    $self->{recipes}->{$recipe_name} = \%opt;
 }
 
 sub run_code {
-    my ($self, $setting_name, $code, $input) = @_;
+    my ($self, $recipe_name, $code, $input) = @_;
 
-    my $setting = $self->{settings}->{$setting_name};
+    my $recipe = $self->{recipes}->{$recipe_name};
     my $runner = Code::AnyRunner::Runner->new(
-        setting => $setting,
+        recipe => $recipe,
         code    => $code,
     );
     $runner->execute($input);

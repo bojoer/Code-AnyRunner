@@ -15,16 +15,16 @@ sub new {
         timeout_sec => 1
     }, $class;
 
-    my $setting = $opt{setting};
+    my $recipe = $opt{recipe};
     my ($temp_fh, $temp_filename) = File::Temp::tempfile(
-        SUFFIX => $setting->{code_suffix},
+        SUFFIX => $recipe->{code_suffix},
     );
 
     my $code = $opt{code};
     print $temp_fh $code;
     close $temp_fh;
 
-    my @command = split(/ /, $setting->{execute});
+    my @command = split(/ /, $recipe->{execute});
     my $code_idx = first { $command[$_] eq "CODE" } (0 .. $#command);
     $command[$code_idx] = $temp_filename;
     $self->{command} = \@command;

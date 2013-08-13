@@ -10,7 +10,7 @@ __PACKAGE__->runtests;
 sub setup : Test(setup) {
     my $self = shift;
     $self->{runner} = Code::AnyRunner->new;
-    $self->{runner}->add_setting(
+    $self->{runner}->add_recipe(
         name => "perl",
         code_suffix => ".pl",
         exec_suffix => "",
