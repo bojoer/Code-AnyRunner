@@ -14,7 +14,7 @@ sub new {
     my $self = bless {}, $class;
 
     my $recipe = $opt{recipe};
-    my ($temp_fh, $temp_filename) = File::Temp::tempfile(
+    my ($temp_fh, $temp_code_filename) = File::Temp::tempfile(
         SUFFIX => $recipe->{code_suffix},
     );
 
@@ -26,7 +26,7 @@ sub new {
 
     my @execute_command = split(/ /, $recipe->{execute});
     my $code_idx = first { $execute_command[$_] eq "CODE" } (0 .. $#execute_command);
-    $execute_command[$code_idx] = $temp_filename;
+    $execute_command[$code_idx] = $temp_code_filename;
     $self->{execute_command} = \@execute_command;
 
     $self;
