@@ -2,6 +2,7 @@ use inc::Module::Install;
 name 'Code-AnyRunner';
 all_from 'lib/Code/AnyRunner.pm';
 
+requires 'Config::Tiny';
 requires 'File::Temp';
 requires 'IPC::Run';
 requires 'Unix::Getrusage';

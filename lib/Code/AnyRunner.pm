@@ -3,14 +3,22 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use Code::AnyRunner::ConfigLoader;
 use Code::AnyRunner::Runner;
 
 sub new {
     my ($class, %opt) = @_;
-    bless {
+    my $self = bless {
         recipes => {},
         timeout_sec => $opt{timeout_sec} || 1,
     }, $class;
+
+    my $loader = Code::AnyRunner::ConfigLoader->new;
+    my $config = $loader->load($opt{config_path});
+
+    $self->load_recipes($config);
+
+    $self;
 }
 
 sub add_recipe {
@@ -20,6 +28,18 @@ sub add_recipe {
     delete $opt{name};
 
     $self->{recipes}->{$recipe_name} = \%opt;
+}
+
+sub load_recipes {
+    my ($self, $config) = @_;
+
+    foreach my $recipe_name (keys %$config) {
+        if ($recipe_name ne "_") {
+            my $recipe = $config->{$recipe_name};
+            $recipe->{name} = $recipe_name;
+            $self->add_recipe(%$recipe);
+        }
+    }
 }
 
 sub run_code {
