@@ -25,11 +25,19 @@ sub new {
     $self->{timeout_sec} = $recipe->{timeout_sec} || 1;
 
     my @execute_command = split(/ /, $recipe->{execute});
-    my $code_idx = first { $execute_command[$_] eq "CODE" } (0 .. $#execute_command);
-    $execute_command[$code_idx] = $temp_code_filename;
+    @execute_command = $self->_change_word(\@execute_command, "CODE", $temp_code_filename);
     $self->{execute_command} = \@execute_command;
 
     $self;
+}
+
+sub _change_word {
+    my ($self, $list, $from_word, $to_word) = @_;
+    my @list_copy = @$list;
+
+    my $idx = first { $list_copy[$_] eq $from_word } (0 .. $#list_copy);
+    $list_copy[$idx] = $to_word;
+    @list_copy;
 }
 
 sub compile {
