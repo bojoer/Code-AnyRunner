@@ -24,10 +24,10 @@ sub new {
 
     $self->{timeout_sec} = $recipe->{timeout_sec} || 1;
 
-    my @command = split(/ /, $recipe->{execute});
-    my $code_idx = first { $command[$_] eq "CODE" } (0 .. $#command);
-    $command[$code_idx] = $temp_filename;
-    $self->{command} = \@command;
+    my @execute_command = split(/ /, $recipe->{execute});
+    my $code_idx = first { $execute_command[$_] eq "CODE" } (0 .. $#execute_command);
+    $execute_command[$code_idx] = $temp_filename;
+    $self->{execute_command} = \@execute_command;
 
     $self;
 }
@@ -39,7 +39,7 @@ sub compile {
 sub execute {
     my ($self, $input) = @_;
 
-    my $command = $self->{command};
+    my $command = $self->{execute_command};
     my $timeout_sec = $self->{timeout_sec};
     my ($output, $error, $timeout) = ("", "", 0);
     my $harness = start $command, \$input, \$output, \$error, timeout($timeout_sec);
