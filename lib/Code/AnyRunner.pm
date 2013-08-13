@@ -50,6 +50,7 @@ sub run_code {
         recipe => $recipe,
         code    => $code,
     );
+    $runner->compile;
     $runner->execute($input);
 }
 
