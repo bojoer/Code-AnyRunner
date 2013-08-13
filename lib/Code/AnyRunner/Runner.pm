@@ -38,9 +38,9 @@ sub new {
         @execute_command = $self->_change_word(\@execute_command, "EXEC", $temp_exec_filename);
         $self->{execute_command} = \@execute_command;
     } else {
-    my @execute_command = split(/ /, $recipe->{execute});
-    @execute_command = $self->_change_word(\@execute_command, "CODE", $temp_code_filename);
-    $self->{execute_command} = \@execute_command;
+        my @execute_command = split(/ /, $recipe->{execute});
+        @execute_command = $self->_change_word(\@execute_command, "CODE", $temp_code_filename);
+        $self->{execute_command} = \@execute_command;
     }
 
     $self;
