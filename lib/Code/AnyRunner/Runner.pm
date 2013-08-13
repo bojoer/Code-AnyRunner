@@ -11,9 +11,7 @@ use Code::AnyRunner::Result;
 
 sub new {
     my ($class, %opt) = @_;
-    my $self = bless {
-        timeout_sec => 1
-    }, $class;
+    my $self = bless {}, $class;
 
     my $recipe = $opt{recipe};
     my ($temp_fh, $temp_filename) = File::Temp::tempfile(
@@ -23,6 +21,8 @@ sub new {
     my $code = $opt{code};
     print $temp_fh $code;
     close $temp_fh;
+
+    $self->{timeout_sec} = $recipe->{timeout_sec} || 1;
 
     my @command = split(/ /, $recipe->{execute});
     my $code_idx = first { $command[$_] eq "CODE" } (0 .. $#command);
