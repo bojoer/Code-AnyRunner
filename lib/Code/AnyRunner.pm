@@ -10,7 +10,6 @@ sub new {
     my ($class, %opt) = @_;
     my $self = bless {
         recipes => {},
-        timeout_sec => $opt{timeout_sec} || 1,
     }, $class;
 
     my $loader = Code::AnyRunner::ConfigLoader->new;
