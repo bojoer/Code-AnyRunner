@@ -12,14 +12,10 @@ sub new {
 
     $self->{recipe} = $opt{recipe};
     $self->{temp_code_filename} = $opt{temp_code_filename};
-    my $temp_exec_filename = $self->_create_exec_filename;
+    $self->{temp_exec_filename} = $self->_create_exec_filename;
 
-    $self->{compile_command} = $self->_create_compile_command(
-        $temp_exec_filename
-    );
-    $self->{execute_command} = $self->_create_execute_command(
-        $temp_exec_filename
-    );
+    $self->{compile_command} = $self->_create_compile_command;
+    $self->{execute_command} = $self->_create_execute_command;
 
     $self;
 }
@@ -38,9 +34,10 @@ sub _create_exec_filename {
 }
 
 sub _create_compile_command {
-    my ($self, $exec_filename) = @_;
+    my ($self) = @_;
     my $recipe = $self->{recipe};
     my $code_filename = $self->{temp_code_filename};
+    my $exec_filename = $self->{temp_exec_filename};
     if ($recipe->{compile}) {
         my @command = split(/ /, $recipe->{compile});
         @command = $self->_change_word(\@command, "CODE", $code_filename);
@@ -52,8 +49,9 @@ sub _create_compile_command {
 }
 
 sub _create_execute_command {
-    my ($self, $filename) = @_;
+    my ($self) = @_;
     my $recipe = $self->{recipe};
+    my $filename = $self->{temp_exec_filename};
     my @command = split(/ /, $recipe->{execute});
     if ($recipe->{compile}) {
         @command = $self->_change_word(\@command, "EXEC", $filename);
