@@ -3,4 +3,5 @@ perl:
   - "5.16"
   - "5.14"
 install: cpanm --with-develop --installdeps --notest .
-script: yes | (perl Makefile.PL && make test)
+script: yes | (perl Makefile.PL && make test && cover -test)
+after_success: cover -report coveralls
