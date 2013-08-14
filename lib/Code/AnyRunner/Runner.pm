@@ -3,11 +3,9 @@ use strict;
 use warnings;
 
 use IPC::Run qw/run start finish timeout/;
-use File::Basename;
-use File::Temp;
-use List::Util qw/first/;
 use Unix::Getrusage;
 
+use Code::AnyRunner::Command;
 use Code::AnyRunner::Result;
 
 sub new {
@@ -25,42 +23,14 @@ sub new {
 
     $self->{timeout_sec} = $recipe->{timeout_sec} || 1;
 
-    if ($recipe->{compile}) {
-        my $temp_exec_filename = $self->_change_file_ext($temp_code_filename,
-                                                         $recipe->{code_suffix},
-                                                         $recipe->{exec_suffix});
-        my @compile_command = split(/ /, $recipe->{compile});
-        @compile_command = $self->_change_word(\@compile_command, "CODE", $temp_code_filename);
-        @compile_command = $self->_change_word(\@compile_command, "EXEC", $temp_exec_filename);
-        $self->{compile_command} = \@compile_command;
-
-        my @execute_command = split(/ /, $recipe->{execute});
-        @execute_command = $self->_change_word(\@execute_command, "EXEC", $temp_exec_filename);
-        $self->{execute_command} = \@execute_command;
-    } else {
-        my @execute_command = split(/ /, $recipe->{execute});
-        @execute_command = $self->_change_word(\@execute_command, "CODE", $temp_code_filename);
-        $self->{execute_command} = \@execute_command;
-    }
+    my $command = Code::AnyRunner::Command->new(
+        recipe => $recipe,
+        temp_code_filename => $temp_code_filename
+    );
+    $self->{compile_command} = $command->{compile_command};
+    $self->{execute_command} = $command->{execute_command};
 
     $self;
-}
-
-sub _change_file_ext {
-    my ($self, $filepath, $from_ext, $to_ext) = @_;
-
-    my $dirname = dirname($filepath);
-    my $filename = basename($filepath, $from_ext).$to_ext;
-    File::Spec->catfile($dirname, $filename);
-}
-
-sub _change_word {
-    my ($self, $list, $from_word, $to_word) = @_;
-    my @list_copy = @$list;
-
-    my $idx = first { $list_copy[$_] eq $from_word } (0 .. $#list_copy);
-    $list_copy[$idx] = $to_word;
-    @list_copy;
 }
 
 sub compile {
