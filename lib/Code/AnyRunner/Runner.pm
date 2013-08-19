@@ -2,11 +2,8 @@ package Code::AnyRunner::Runner;
 use strict;
 use warnings;
 
-use IPC::Run qw/run start finish timeout/;
-use Unix::Getrusage;
-
 use Code::AnyRunner::Command;
-use Code::AnyRunner::Result;
+use Code::AnyRunner::ProcManager;
 
 sub new {
     my ($class, %opt) = @_;
@@ -22,6 +19,7 @@ sub new {
     close $temp_fh;
 
     $self->{timeout_sec} = $recipe->{timeout_sec} || 1;
+    $self->{proc_manager} = Code::AnyRunner::ProcManager->new;
 
     my $command = Code::AnyRunner::Command->new(
         recipe => $recipe,
@@ -38,25 +36,9 @@ sub compile {
 
     my $command = $self->{compile_command};
     if ($command) {
+        my $proc_manager = $self->{proc_manager};
         my $timeout_sec = $self->{timeout_sec};
-        my ($input, $output, $error, $timeout) = ("", "", "", 0);
-        eval {
-            run $command, \$input, \$output, \$error, timeout($timeout_sec);
-        };
-        if ($@) {
-            if ($@ =~ /timeout/) {
-                $timeout = 1;
-            } else {
-                die $@;
-            }
-        }
-
-        my $result = Code::AnyRunner::Result->new(
-            output => $output,
-            error  => $error,
-            timeout => $timeout
-        );
-
+        my $result = $proc_manager->run($command, "", $timeout_sec);
         return $result;
     }
 }
@@ -65,29 +47,9 @@ sub execute {
     my ($self, $input) = @_;
 
     my $command = $self->{execute_command};
+    my $proc_manager = $self->{proc_manager};
     my $timeout_sec = $self->{timeout_sec};
-    my ($output, $error, $timeout) = ("", "", 0);
-    my $harness = start $command, \$input, \$output, \$error, timeout($timeout_sec);
-    my $rusage = getrusage_children;
-    eval {
-        finish $harness;
-    };
-    if ($@) {
-        if ($@ =~ /timeout/) {
-            $timeout = 1;
-        }
-        else {
-            die $@;
-        }
-    }
-
-    my $result = Code::AnyRunner::Result->new(
-        output => $output,
-        error  => $error,
-        timeout => $timeout,
-        rusage => $rusage
-    );
-
+    my $result = $proc_manager->run($command, $input, $timeout_sec);
     return $result;
 }
 
