@@ -80,13 +80,10 @@ sub _split_rusage {
     foreach my $line (@rusage) {
         next unless defined $line;
         if ($line =~ /^\tUser time[ a-zA-Z\(\):]+([\.\d]+)$/) {
-            print $line;
             $rusage->{ru_utime} = $1;
         } elsif ($line =~ /^\tSystem time[ a-zA-Z\(\):]+([\.\d]+)$/) {
-            print $line;
             $rusage->{ru_stime} = $1;
         } elsif ($line =~ /^\tMaximum resident set size[ a-zA-Z\(\):]+([\.\d]+)$/) {
-            print $line;
             $rusage->{ru_maxrss} = $1;
         }
     }
