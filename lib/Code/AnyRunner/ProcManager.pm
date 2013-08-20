@@ -71,7 +71,7 @@ sub _split_rusage {
     my @error = split "\n", $error;
     my $error_array_size = scalar(@error);
 
-    my @rusage = @error[$#error - 22, $#error];
+    my @rusage = @error[$#error - 22 .. $#error];
     splice @error, $#error - 22, 23 if $error_array_size >= 23;
 
     $error = join "\n", @error;
