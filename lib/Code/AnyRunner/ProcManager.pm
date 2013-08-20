@@ -2,6 +2,8 @@ package Code::AnyRunner::ProcManager;
 use strict;
 use warnings;
 
+use File::Basename;
+use File::Spec;
 use IPC::Run;
 use Parallel::ForkManager;
 
@@ -34,7 +36,9 @@ sub run {
     else {
         my ($output, $error, $timeout) = ("", "", 0);
 
-        unshift @$command, ("/usr/bin/time", "--verbose");
+        my $time_command = File::Spec->catfile(dirname(File::Spec->rel2abs(__FILE__)), "time.pl");
+        unshift @$command, $time_command;
+
         eval {
             IPC::Run::run($command, \$input, \$output, \$error,
                           IPC::Run::timeout($timeout_sec));
@@ -68,25 +72,17 @@ sub run {
 sub _split_rusage {
     my ($self, $error) = @_;
 
-    my @error = split "\n", $error;
-    my $error_array_size = scalar(@error);
-
-    my @rusage = @error[$#error - 22 .. $#error];
-    splice @error, $#error - 22, 23 if $error_array_size >= 23;
-
-    $error = join "\n", @error;
-
     my $rusage = {};
-    foreach my $line (@rusage) {
-        next unless defined $line;
-        if ($line =~ /^\tUser time[ a-zA-Z\(\):]+([\.\d]+)$/) {
+    my @error = split "\n", $error;
+    if ($#error >= 0) {
+        my $rusage_line = splice @error, $#error;
+        if ($rusage_line =~ /([\.\d]+) ([\.\d]+) ([\.\d]+) ([\.\d]+)/) {
             $rusage->{ru_utime} = $1;
-        } elsif ($line =~ /^\tSystem time[ a-zA-Z\(\):]+([\.\d]+)$/) {
-            $rusage->{ru_stime} = $1;
-        } elsif ($line =~ /^\tMaximum resident set size[ a-zA-Z\(\):]+([\.\d]+)$/) {
-            $rusage->{ru_maxrss} = $1;
+            $rusage->{ru_stime} = $2;
+            $rusage->{ru_maxrss} = $4;
         }
     }
+    $error = join "\n", @error;
 
     ($rusage, $error);
 }
