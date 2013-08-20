@@ -4,7 +4,6 @@ use warnings;
 
 use IPC::Run;
 use Parallel::ForkManager;
-use Unix::Getrusage;
 
 use Code::AnyRunner::Result;
 
@@ -34,6 +33,8 @@ sub run {
     }
     else {
         my ($output, $error, $timeout) = ("", "", 0);
+
+        unshift @$command, ("/usr/bin/time", "--verbose");
         eval {
             IPC::Run::run($command, \$input, \$output, \$error,
                           IPC::Run::timeout($timeout_sec));
@@ -46,7 +47,7 @@ sub run {
             }
         }
 
-        my $rusage = getrusage_children;
+        ($rusage, $error) = $self->_split_rusage($error);
         $manager->finish(0, {
             output  => $output,
             error   => $error,
@@ -62,6 +63,35 @@ sub run {
         rusage  => $rusage,
     );
     $result;
+}
+
+sub _split_rusage {
+    my ($self, $error) = @_;
+
+    my @error = split "\n", $error;
+    my $error_array_size = scalar(@error);
+
+    my @rusage = @error[$#error - 22, $#error];
+    splice @error, $#error - 22, 23 if $error_array_size >= 23;
+
+    $error = join "\n", @error;
+
+    my $rusage = {};
+    foreach my $line (@rusage) {
+        next unless defined $line;
+        if ($line =~ /^\tUser time[ a-zA-Z\(\):]+([\.\d]+)$/) {
+            print $line;
+            $rusage->{ru_utime} = $1;
+        } elsif ($line =~ /^\tSystem time[ a-zA-Z\(\):]+([\.\d]+)$/) {
+            print $line;
+            $rusage->{ru_stime} = $1;
+        } elsif ($line =~ /^\tMaximum resident set size[ a-zA-Z\(\):]+([\.\d]+)$/) {
+            print $line;
+            $rusage->{ru_maxrss} = $1;
+        }
+    }
+
+    ($rusage, $error);
 }
 
 1;

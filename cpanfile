@@ -1,7 +1,6 @@
 requires 'Config::Tiny';
 requires 'File::Temp';
 requires 'IPC::Run';
-requires 'Unix::Getrusage';
 requires 'Parallel::ForkManager';
 
 test_requires 'Test::More';
