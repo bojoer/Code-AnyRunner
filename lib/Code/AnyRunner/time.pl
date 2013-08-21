@@ -3,7 +3,8 @@ use strict;
 use warnings;
 
 use Time::HiRes qw( gettimeofday tv_interval );
-use Proc::Wait3;
+use Linux::Smaps;
+use POSIX qw( WNOHANG );
 
 if (@ARGV == 0) {
     print "Usage: ".__FILE__." command [arg...]\n";
@@ -24,17 +25,19 @@ elsif ($child_pid == 0) {
 (my $signal_int, $SIG{INT}) = ($SIG{INT}, "IGNORE");
 (my $signal_quit, $SIG{QUIT}) = ($SIG{QUIT}, "IGNORE");
 
-# resuse_end
+my $smaps = Linux::Smaps->new($child_pid);
+my $maxuss = uss($smaps);
 
-my ($pid, $status, $utime, $stime, $maxrss, $ixrss, $idrss, $isrss,
-    $minflt, $majflt, $nswap, $inblock, $oublock, $msgsnd, $msgrcv,
-    $nsignals, $nvcsw, $nivcsw);
-while(1) {
-    ($pid, $status, $utime, $stime, $maxrss, $ixrss, $idrss, $isrss,
-     $minflt, $majflt, $nswap, $inblock, $oublock, $msgsnd, $msgrcv,
-     $nsignals, $nvcsw, $nivcsw) = wait3(1);
-    last unless defined $pid;   # there are no dead children
-    last if $pid == $child_pid;
+# this infinite loop cannot get a correct maximum uss ...
+# so this maximum uss change by execute timing ...
+while (1) {
+    my $uss = uss($smaps);
+    $maxuss = $uss if $maxuss < $uss;
+
+    my $caught = waitpid(-1, WNOHANG);
+    last if $caught == $child_pid;
+
+    last unless defined $smaps->update;
 }
 
 my $elapsed = tv_interval($start_time, [gettimeofday]);
@@ -42,4 +45,9 @@ my $elapsed = tv_interval($start_time, [gettimeofday]);
 $SIG{INT} = $signal_int;
 $SIG{QUIT} = $signal_quit;
 
-print STDERR "$utime $stime $elapsed $maxrss\n";
+print STDERR "$elapsed $maxuss\n";
+
+sub uss {
+    my $smaps = shift;
+    $smaps->private_dirty + $smaps->private_clean;
+}

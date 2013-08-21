@@ -2,7 +2,7 @@ requires 'Config::Tiny';
 requires 'File::Temp';
 requires 'IPC::Run';
 requires 'Parallel::ForkManager';
-requires 'Proc::Wait3';
+requires 'Linux::Smaps';
 
 test_requires 'Test::More';
 test_requires 'Test::Class';

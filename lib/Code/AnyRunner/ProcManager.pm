@@ -76,10 +76,8 @@ sub _split_rusage {
     my @error = split "\n", $error;
     if ($#error >= 0) {
         my $rusage_line = splice @error, $#error;
-        if ($rusage_line =~ /([\.\d]+) ([\.\d]+) ([\.\d]+) ([\.\d]+)/) {
-            $rusage->{ru_utime} = $1;
-            $rusage->{ru_stime} = $2;
-            $rusage->{ru_maxrss} = $4;
+        if ($rusage_line =~ /([\.\d]+) ([\.\d]+)/) {
+            $rusage->{ru_maxrss} = $2;
         }
     }
     $error = join "\n", @error;
