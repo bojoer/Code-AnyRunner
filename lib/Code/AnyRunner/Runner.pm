@@ -1,4 +1,4 @@
-package Code::AnyRunner::ProcManager;
+package Code::AnyRunner::Runner;
 use strict;
 use warnings;
 

@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Code::AnyRunner::Command;
-use Code::AnyRunner::ProcManager;
+use Code::AnyRunner::Runner;
 
 sub new {
     my ($class, %opt) = @_;
@@ -19,7 +19,7 @@ sub new {
     close $temp_fh;
 
     $self->{timeout_sec} = $recipe->{timeout_sec} || 1;
-    $self->{proc_manager} = Code::AnyRunner::ProcManager->new;
+    $self->{runner} = Code::AnyRunner::Runner->new;
 
     my $command = Code::AnyRunner::Command->new(
         recipe => $recipe,
@@ -36,9 +36,9 @@ sub compile {
 
     my $command = $self->{compile_command};
     if ($command) {
-        my $proc_manager = $self->{proc_manager};
+        my $runner = $self->{runner};
         my $timeout_sec = $self->{timeout_sec};
-        my $result = $proc_manager->run($command, "", $timeout_sec);
+        my $result = $runner->run($command, "", $timeout_sec);
         return $result;
     }
 }
@@ -47,9 +47,9 @@ sub execute {
     my ($self, $input) = @_;
 
     my $command = $self->{execute_command};
-    my $proc_manager = $self->{proc_manager};
+    my $runner = $self->{runner};
     my $timeout_sec = $self->{timeout_sec};
-    my $result = $proc_manager->run($command, $input, $timeout_sec);
+    my $result = $runner->run($command, $input, $timeout_sec);
     return $result;
 }
 
