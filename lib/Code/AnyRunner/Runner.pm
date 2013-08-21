@@ -18,22 +18,22 @@ sub run {
 
     my ($output, $error, $timeout, $rusage) = ("", "", 0, {});
 
-        my $time_command = File::Spec->catfile(dirname(File::Spec->rel2abs(__FILE__)), "time.pl");
-        unshift @$command, $time_command;
+    my $time_command = File::Spec->catfile(dirname(File::Spec->rel2abs(__FILE__)), "time.pl");
+    unshift @$command, $time_command;
 
-        eval {
-            IPC::Run::run($command, \$input, \$output, \$error,
-                          IPC::Run::timeout($timeout_sec));
-        };
-        if ($@) {
-            if ($@ =~ /timeout/) {
-                $timeout = 1;
-            } else {
-                die $@;
-            }
+    eval {
+        IPC::Run::run($command, \$input, \$output, \$error,
+                      IPC::Run::timeout($timeout_sec));
+    };
+    if ($@) {
+        if ($@ =~ /timeout/) {
+            $timeout = 1;
+        } else {
+            die $@;
         }
+    }
 
-        ($rusage, $error) = $self->_split_rusage($error);
+    ($rusage, $error) = $self->_split_rusage($error);
 
     my $result = Code::AnyRunner::Result->new(
         output  => $output,
