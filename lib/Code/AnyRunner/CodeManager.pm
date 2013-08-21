@@ -1,4 +1,4 @@
-package Code::AnyRunner::Runner;
+package Code::AnyRunner::CodeManager;
 use strict;
 use warnings;
 

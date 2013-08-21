@@ -4,7 +4,7 @@ use warnings;
 our $VERSION = '0.01';
 
 use Code::AnyRunner::ConfigLoader;
-use Code::AnyRunner::Runner;
+use Code::AnyRunner::CodeManager;
 
 sub new {
     my ($class, %opt) = @_;
@@ -46,12 +46,12 @@ sub run_code {
     my ($self, $recipe_name, $code, $input) = @_;
 
     my $recipe = $self->{recipes}->{$recipe_name};
-    my $runner = Code::AnyRunner::Runner->new(
+    my $manager = Code::AnyRunner::CodeManager->new(
         recipe => $recipe,
         code    => $code,
     );
-    $runner->compile;
-    $runner->execute($input);
+    $manager->compile;
+    $manager->execute($input);
 }
 
 1;
