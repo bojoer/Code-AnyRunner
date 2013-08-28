@@ -3,7 +3,7 @@ use warnings;
 use parent qw( Test::Class );
 use Test::More;
 
-use File::Basename qw( basename );
+use File::Basename qw( dirname );
 use File::Spec;
 
 use Code::AnyRunner::ConfigLoader;
