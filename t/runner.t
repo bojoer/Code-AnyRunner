@@ -10,7 +10,7 @@ sub test_return_result : Tests {
     my $mock_module = new Test::MockModule("IPC::Run");
     $mock_module->mock("run", sub { "DUMMY" });
 
-    my ($command, $input, $timeout_sec);
+    my ($command, $input, $timeout_sec) = ([], "", 0);
     my $runner = Code::AnyRunner::Runner->new;
     my $result = $runner->run($command, $input, $timeout_sec);
 
@@ -23,7 +23,7 @@ sub test_timeout : Tests {
         die "timeout";
     });
 
-    my ($command, $input, $timeout_sec);
+    my ($command, $input, $timeout_sec) = ([], "", 0);
     my $runner = Code::AnyRunner::Runner->new;
     my $result = $runner->run($command, $input, $timeout_sec);
 
@@ -36,7 +36,7 @@ sub test_eval_error : Tests {
         die "eval error";
     });
 
-    my ($command, $input, $timeout_sec);
+    my ($command, $input, $timeout_sec) = ([], "", 0);
     my $runner = Code::AnyRunner::Runner->new;
 
     my $result;
