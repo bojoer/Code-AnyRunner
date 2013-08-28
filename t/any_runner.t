@@ -56,4 +56,16 @@ sub test_run_code : Tests {
     isa_ok($runner->run_code, "Code::AnyRunner::Result");
 }
 
+sub test_create_manager : Tests {
+    my $runner = Code::AnyRunner->new;
+    my $recipe = +{
+        execute => "command CODE",
+        exec_suffix => "",
+    };
+    $runner->{recipes}->{recipe_name} = $recipe;
+
+    my $manager = $runner->_create_manager("recipe_name", "some code");
+    isa_ok($manager, "Code::AnyRunner::CodeManager");
+}
+
 __PACKAGE__->runtests;
