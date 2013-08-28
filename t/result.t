@@ -37,7 +37,7 @@ sub test_timeout : Tests {
 sub test_rusage : Tests {
     my $maxrss = rand(1000);
     my $rusage = {
-        ru_maxrss => $maxrss,
+        maxrss => $maxrss,
     };
     my $result = Code::AnyRunner::Result->new(
         rusage => $rusage,

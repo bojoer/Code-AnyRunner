@@ -52,7 +52,7 @@ sub _split_rusage {
     if ($#error >= 0) {
         my $rusage_line = splice @error, $#error;
         if ($rusage_line =~ /([\.\d]+) ([\.\d]+)/) {
-            $rusage->{ru_maxrss} = $2;
+            $rusage->{maxrss} = $2;
         }
     }
     $error = join "\n", @error;

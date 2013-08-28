@@ -21,7 +21,7 @@ sub is_timeout {
 }
 
 sub maxrss {
-    shift->{rusage}->{ru_maxrss};
+    shift->{rusage}->{maxrss};
 }
 
 1;
