@@ -45,13 +45,21 @@ sub load_recipes {
 sub run_code {
     my ($self, $recipe_name, $code, $input) = @_;
 
+    my $manager = $self->_create_manager($recipe_name, $code);
+    $manager->compile;
+    $manager->execute($input);
+
+    1;
+}
+
+sub _create_manager {
+    my ($self, $recipe_name, $code) = @_;
+
     my $recipe = $self->{recipes}->{$recipe_name};
-    my $manager = Code::AnyRunner::CodeManager->new(
+    Code::AnyRunner::CodeManager->new(
         recipe => $recipe,
         code    => $code,
     );
-    $manager->compile;
-    $manager->execute($input);
 }
 
 1;
