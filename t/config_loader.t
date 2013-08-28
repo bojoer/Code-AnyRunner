@@ -5,25 +5,27 @@ use Test::More;
 
 use File::Basename;
 
-use Code::AnyRunner;
+use Code::AnyRunner::ConfigLoader;
 
 __PACKAGE__->runtests;
 
 sub test_load : Tests{
     my $self = shift;
     my $config_path = $self->fixture_path("config.ini");
-    my $runner = Code::AnyRunner->new(
-        config_path => $config_path,
-    );
+
+    my $loader = Code::AnyRunner::ConfigLoader->new;
+    my $actual_config = $loader->load($config_path);
 
     my $expected = {
+        _ => {
+            baz => "zzz"
+        },
         foo => {
-            baz => "zzz",
             bar => "hoge"
         }
     };
 
-    is_deeply $expected, $runner->{recipes};
+    is_deeply $expected, $actual_config;
 }
 
 sub fixture_path {
