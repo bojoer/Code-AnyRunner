@@ -34,14 +34,14 @@ sub test_compile : Tests {
     my $no_need_compile_manager = $self->{no_need_compile_manager};
 
     my $runner = $need_compile_manager->{runner};
-    stub($runner)->run("COMPILED");
+    mock($runner)->expects("run")->returns("COMPILED");
 
     is($need_compile_manager->compile, "COMPILED");
 
     $runner = $no_need_compile_manager->{runner};
     stub($runner)->run("COMPILED");
 
-    is($no_need_compile_manager->compile, undef);
+    isnt($no_need_compile_manager->compile, "COMPILED");
 }
 
 sub test_execute : Tests {
@@ -50,12 +50,12 @@ sub test_execute : Tests {
     my $no_need_compile_manager = $self->{no_need_compile_manager};
 
     my $runner = $need_compile_manager->{runner};
-    stub($runner)->run("EXECUTED");
+    mock($runner)->expects("run")->returns("EXECUTED");
 
     is($need_compile_manager->execute, "EXECUTED");
 
     $runner = $no_need_compile_manager->{runner};
-    stub($runner)->run("EXECUTED");
+    mock($runner)->expects("run")->returns("EXECUTED");
 
     is($no_need_compile_manager->execute, "EXECUTED");
 }
