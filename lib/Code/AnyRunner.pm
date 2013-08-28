@@ -47,9 +47,9 @@ sub run_code {
 
     my $manager = $self->_create_manager($recipe_name, $code);
     $manager->compile;
-    $manager->execute($input);
+    my $result = $manager->execute($input);
 
-    1;
+    $result;
 }
 
 sub _create_manager {

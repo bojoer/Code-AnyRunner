@@ -49,10 +49,11 @@ sub test_run_code : Tests {
     my $runner = Code::AnyRunner->new;
 
     my $mock_object = Test::MockObject->new;
-    $mock_object->mock("compile")->mock("execute");
+    $mock_object->mock("compile");
+    $mock_object->mock("execute", sub { Code::AnyRunner::Result->new });
 
     stub($runner)->_create_manager($mock_object);
-    ok($runner->run_code);
+    isa_ok($runner->run_code, "Code::AnyRunner::Result");
 }
 
 __PACKAGE__->runtests;
