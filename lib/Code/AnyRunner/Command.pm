@@ -2,8 +2,8 @@ package Code::AnyRunner::Command;
 use strict;
 use warnings;
 
-use File::Basename;
-use File::Temp;
+use File::Basename qw/basename dirname/;
+use File::Spec;
 use List::Util qw/first/;
 
 sub new {

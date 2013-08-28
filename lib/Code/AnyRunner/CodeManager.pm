@@ -2,6 +2,8 @@ package Code::AnyRunner::CodeManager;
 use strict;
 use warnings;
 
+use File::Temp;
+
 use Code::AnyRunner::Command;
 use Code::AnyRunner::Runner;
 

@@ -3,7 +3,7 @@ use warnings;
 use base qw/Test::Class/;
 use Test::More;
 
-use File::Basename;
+use File::Basename qw/basename/;
 use File::Spec;
 
 use Code::AnyRunner::ConfigLoader;
