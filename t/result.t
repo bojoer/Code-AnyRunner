@@ -5,8 +5,6 @@ use Test::More;
 
 use Code::AnyRunner::Result;
 
-__PACKAGE__->runtests;
-
 sub test_error : Tests {
     my $error = "error";
     my $result = Code::AnyRunner::Result->new(
@@ -48,3 +46,5 @@ sub test_rusage : Tests {
     is($result->elapsed_time, $elapsed_time, "elapsed time");
     is($result->maxrss, $maxrss, "max rss");
 }
+
+__PACKAGE__->runtests;

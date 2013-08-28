@@ -8,8 +8,6 @@ use File::Spec;
 
 use Code::AnyRunner::ConfigLoader;
 
-__PACKAGE__->runtests;
-
 sub test_load : Tests{
     my $self = shift;
     my $config_path = $self->fixture_path("config.ini");
@@ -33,3 +31,5 @@ sub fixture_path {
     my ($self, $file_path) = @_;
     File::Spec->catfile(dirname(__FILE__), "fixtures", $file_path);
 }
+
+__PACKAGE__->runtests;
