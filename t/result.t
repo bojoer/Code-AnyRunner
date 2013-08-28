@@ -35,19 +35,13 @@ sub test_timeout : Tests {
 }
 
 sub test_rusage : Tests {
-    my $utime = rand(100);
-    my $stime = rand(100);
     my $maxrss = rand(1000);
     my $rusage = {
-        ru_utime => $utime,
-        ru_stime => $stime,
         ru_maxrss => $maxrss,
     };
     my $result = Code::AnyRunner::Result->new(
         rusage => $rusage,
     );
 
-    is($result->utime, $utime, "user time");
-    is($result->stime, $stime, "system time");
     is($result->maxrss, $maxrss, "max rss");
 }

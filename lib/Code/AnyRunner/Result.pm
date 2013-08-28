@@ -20,14 +20,6 @@ sub is_timeout {
     shift->{timeout} == 1;
 }
 
-sub utime {
-    shift->{rusage}->{ru_utime};
-}
-
-sub stime {
-    shift->{rusage}->{ru_stime};
-}
-
 sub maxrss {
     shift->{rusage}->{ru_maxrss};
 }
