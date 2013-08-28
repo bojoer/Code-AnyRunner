@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use parent qw/Test::Class/;
+use parent qw( Test::Class );
 use Test::More;
 
 use Code::AnyRunner::Command;

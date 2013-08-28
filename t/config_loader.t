@@ -1,9 +1,9 @@
 use strict;
 use warnings;
-use base qw/Test::Class/;
+use base qw( Test::Class );
 use Test::More;
 
-use File::Basename qw/basename/;
+use File::Basename qw( basename );
 use File::Spec;
 
 use Code::AnyRunner::ConfigLoader;

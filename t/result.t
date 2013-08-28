@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use base qw/Test::Class/;
+use base qw( Test::Class );
 use Test::More;
 
 use Code::AnyRunner::Result;

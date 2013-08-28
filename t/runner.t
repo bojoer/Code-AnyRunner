@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use parent qw/Test::Class/;
+use parent qw( Test::Class );
 use Test::MockModule;
 use Test::More;
 

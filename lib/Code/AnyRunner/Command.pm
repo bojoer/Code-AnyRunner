@@ -2,9 +2,9 @@ package Code::AnyRunner::Command;
 use strict;
 use warnings;
 
-use File::Basename qw/basename dirname/;
+use File::Basename qw( basename dirname );
 use File::Spec;
-use List::Util qw/first/;
+use List::Util qw( first );
 
 sub new {
     my ($class, %opt) = @_;
