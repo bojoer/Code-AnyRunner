@@ -6,6 +6,7 @@ requires 'Linux::Smaps';
 test_requires 'Test::More';
 test_requires 'Test::Class';
 test_requires 'Test::Double';
+test_requires 'Test::MockModule';
 
 on 'develop' => sub {
     requires 'Module::Install';
