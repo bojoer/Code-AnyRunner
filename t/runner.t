@@ -58,6 +58,7 @@ ERROR
     my ($actual_rusage, $actual_error) = $runner->_split_rusage($error);
 
     my $expected_rusage = +{
+        elapsed_time => 12.34,
         maxrss => 56.78,
     };
     is_deeply($actual_rusage, $expected_rusage, "Split rusage");

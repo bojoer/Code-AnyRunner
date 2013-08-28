@@ -52,6 +52,7 @@ sub _split_rusage {
     if ($#error >= 0) {
         my $rusage_line = splice @error, $#error;
         if ($rusage_line =~ /([\.\d]+) ([\.\d]+)/) {
+            $rusage->{elapsed_time} = $1;
             $rusage->{maxrss} = $2;
         }
     }

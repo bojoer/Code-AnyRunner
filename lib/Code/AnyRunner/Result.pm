@@ -20,6 +20,10 @@ sub is_timeout {
     shift->{timeout} == 1;
 }
 
+sub elapsed_time {
+    shift->{rusage}->{elapsed_time};
+}
+
 sub maxrss {
     shift->{rusage}->{maxrss};
 }
