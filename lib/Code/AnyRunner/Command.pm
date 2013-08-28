@@ -25,10 +25,12 @@ sub _create_exec_filename {
     my $recipe = $self->{recipe};
     my $code_filename = $self->{temp_code_filename};
     my $exec_filename = $code_filename;
-    if ($recipe->{compile}) {
+    my $code_suffix = $recipe->{code_suffix} || "";
+    my $exec_suffix = $recipe->{exec_suffix} || "";
+    if ($recipe->{compile} && ($code_suffix ne $exec_suffix)) {
         $exec_filename = $self->_change_file_ext($code_filename,
-                                                 $recipe->{code_suffix},
-                                                 $recipe->{exec_suffix});
+                                                 $code_suffix,
+                                                 $exec_suffix);
     }
     $exec_filename;
 }
