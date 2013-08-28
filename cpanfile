@@ -7,6 +7,7 @@ test_requires 'Test::More';
 test_requires 'Test::Class';
 test_requires 'Test::Double';
 test_requires 'Test::MockModule';
+test_requires 'Test::MockObject';
 
 on 'develop' => sub {
     requires 'Module::Install';
