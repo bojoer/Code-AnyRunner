@@ -4,6 +4,7 @@ use base qw/Test::Class/;
 use Test::More;
 
 use File::Basename;
+use File::Spec;
 
 use Code::AnyRunner::ConfigLoader;
 
